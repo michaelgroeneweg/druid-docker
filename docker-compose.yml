@@ -46,6 +46,7 @@ services:
       - ZOO_MY_ID=1
   
   kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka:6.0.14
     depends_on:
       - zookeeper
@@ -60,6 +61,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   kafka-ui:
+    container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - 8085:8080

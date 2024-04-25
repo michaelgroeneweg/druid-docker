@@ -27,7 +27,6 @@ volumes:
   router_var: {}
   druid_shared: {}
 
-
 services:
   postgres:
     container_name: postgres
@@ -36,11 +35,7 @@ services:
       - "5432:5432"
     volumes:
       - metadata_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=FoolishPassword
-      - POSTGRES_USER=druid
-      - POSTGRES_DB=druid
-
+  
   # Need 3.5 or later for container nodes
   zookeeper:
     container_name: zookeeper
@@ -49,6 +44,31 @@ services:
       - "2181:2181"
     environment:
       - ZOO_MY_ID=1
+  
+  kafka:
+    image: confluentinc/cp-kafka:6.0.14
+    depends_on:
+      - zookeeper
+    ports:
+      - '29092:29092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:9092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8085:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      AUTH_TYPE: "LOGIN_FORM"
+      SPRING_SECURITY_USER_NAME: ${SPRING_SECURITY_USER_NAME}
+      SPRING_SECURITY_USER_PASSWORD: ${SPRING_SECURITY_USER_PASSWORD}
 
   coordinator:
     image: apache/druid:29.0.1
@@ -63,8 +83,6 @@ services:
       - "8081:8081"
     command:
       - coordinator
-    env_file:
-      - environment
 
   broker:
     image: apache/druid:29.0.1
@@ -79,8 +97,6 @@ services:
       - "8082:8082"
     command:
       - broker
-    env_file:
-      - environment
 
   historical:
     image: apache/druid:29.0.1
@@ -96,8 +112,6 @@ services:
       - "8083:8083"
     command:
       - historical
-    env_file:
-      - environment
 
   middlemanager:
     image: apache/druid:29.0.1
@@ -114,8 +128,6 @@ services:
       - "8100-8105:8100-8105"
     command:
       - middleManager
-    env_file:
-      - environment
 
   router:
     image: apache/druid:29.0.1
@@ -130,5 +142,3 @@ services:
       - "8888:8888"
     command:
       - router
-    env_file:
-      - environment

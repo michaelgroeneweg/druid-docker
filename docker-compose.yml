@@ -35,7 +35,7 @@ services:
     volumes:
       - metadata_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - environment
   
   # Need 3.5 or later for container nodes
   zookeeper:
@@ -60,6 +60,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    env_file:
+      - environment
 
   kafka-ui:
     container_name: kafka-ui
@@ -87,7 +89,7 @@ services:
     command:
       - coordinator
     env_file:
-      - .env
+      - environment
 
   broker:
     image: apache/druid:29.0.1
@@ -103,7 +105,7 @@ services:
     command:
       - broker
     env_file:
-      - .env
+      - environment
 
   historical:
     image: apache/druid:29.0.1
@@ -120,7 +122,7 @@ services:
     command:
       - historical
     env_file:
-      - .env
+      - environment
 
   middlemanager:
     image: apache/druid:29.0.1
@@ -138,7 +140,7 @@ services:
     command:
       - middleManager
     env_file:
-      - .env
+      - environment
 
   router:
     image: apache/druid:29.0.1
@@ -154,4 +156,4 @@ services:
     command:
       - router
     env_file:
-      - .env
+      - environment

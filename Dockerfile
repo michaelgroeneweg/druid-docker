@@ -78,12 +78,18 @@ COPY druid.sh /druid.sh
 COPY peon.sh /peon.sh
 COPY deduplicate_jars.sh /deduplicate_jars.sh
 
+RUN chmod +x /deduplicate_jars.sh
+
 # create necessary directories which could be mounted as volume
 # copy and de-duplicate jars from builder in same layer to reduce image size
 #   /opt/druid/var is used to keep individual files(e.g. log) of each Druid service
 #   /opt/shared is used to keep segments and task logs shared among Druid services
-RUN chmod +x /deduplicate_jars.sh \
- && --mount=type=bind,from=builder,source=/opt,target=/builder/opt  mkdir -p /opt/druid/var /opt/shared  && cp -r /builder/opt/druid /opt/  && /deduplicate_jars.sh /opt/druid  && chown -R druid:druid /opt/druid  && chmod 775 /opt/druid/var /opt/shared
+RUN --mount=type=bind,from=builder,source=/opt,target=/builder/opt \
+ mkdir -p /opt/druid/var /opt/shared \
+ && cp -r /builder/opt/druid /opt/ \
+ && /deduplicate_jars.sh /opt/druid \
+ && chown -R druid:druid /opt/druid \
+ && chmod 775 /opt/druid/var /opt/shared
 
 USER druid
 VOLUME /opt/druid/var

@@ -82,9 +82,9 @@ RUN addgroup -S -g 1000 druid \
 COPY --from=bash-static /bin/bash /bin/bash
 RUN chmod 755 /bin/bash
 
-COPY distribution/docker/druid.sh /druid.sh
-COPY distribution/docker/peon.sh /peon.sh
-COPY distribution/docker/deduplicate_jars.sh /deduplicate_jars.sh
+COPY druid.sh /druid.sh
+COPY peon.sh /peon.sh
+COPY deduplicate_jars.sh /deduplicate_jars.sh
 
 # create necessary directories which could be mounted as volume
 # copy and de-duplicate jars from builder in same layer to reduce image size

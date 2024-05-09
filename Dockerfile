@@ -32,6 +32,8 @@ ARG BUILD_FROM_SOURCE="true"
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get -qq update \
     && apt-get -qq -y install --no-install-recommends python3 python3-yaml
+    
+RUN apk add --no-cache wget
 
 COPY . /src
 WORKDIR /src

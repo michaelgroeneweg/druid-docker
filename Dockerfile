@@ -35,13 +35,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 COPY . /src
 WORKDIR /src
-
-
-RUN --mount=type=cache,target=/root/.m2 VERSION=$(mvn -B -q org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate \
-      -Dexpression=project.version -DforceStdout=true \
-    ) \
- && tar -zxf ./distribution/target/apache-druid-${VERSION}-bin.tar.gz -C /opt \
- && mv /opt/apache-druid-${VERSION} /opt/druid
+RUN wget -q -O /tmp/apache-druid.tar.gz https://dlcdn.apache.org/druid/29.0.1/apache-druid-29.0.1-bin.tar.gz \
+ && tar -zxf /tmp/apache-druid.tar.gz -C /opt \
+ && mv /opt/apache-druid-29.0.1 /opt/druid \
+ && rm /tmp/apache-druid.tar.gz
 
 FROM alpine:3 as bash-static
 ARG TARGETARCH

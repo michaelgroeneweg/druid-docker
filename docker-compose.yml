@@ -81,7 +81,7 @@ services:
       - coordinator_var:/opt/druid/var
     depends_on:
       - zookeeper
-      - postgres-druid
+      - postgres
     ports:
       - "8081:8081"
     command:
@@ -96,7 +96,7 @@ services:
       - broker_var:/opt/druid/var
     depends_on:
       - zookeeper
-      - postgres-druid
+      - postgres
       - coordinator
     ports:
       - "8082:8082"
@@ -113,7 +113,7 @@ services:
       - historical_var:/opt/druid/var
     depends_on: 
       - zookeeper
-      - postgres-druid
+      - postgres
       - coordinator
     ports:
       - "8083:8083"
@@ -130,7 +130,7 @@ services:
       - middle_var:/opt/druid/var
     depends_on: 
       - zookeeper
-      - postgres-druid
+      - postgres
       - coordinator
     ports:
       - "8091:8091"
@@ -147,7 +147,7 @@ services:
       - router_var:/opt/druid/var
     depends_on:
       - zookeeper
-      - postgres-druid
+      - postgres
       - coordinator
     ports:
       - "8888:8888"

@@ -35,6 +35,8 @@ services:
       - "5432:5432"
     volumes:
       - metadata_data:/var/lib/postgresql/data
+    env_file:
+      - .env
   
   # Need 3.5 or later for container nodes
   zookeeper:
@@ -85,6 +87,8 @@ services:
       - "8081:8081"
     command:
       - coordinator
+    env_file:
+      - .env
 
   broker:
     image: apache/druid:29.0.1
@@ -99,6 +103,8 @@ services:
       - "8082:8082"
     command:
       - broker
+    env_file:
+      - .env
 
   historical:
     image: apache/druid:29.0.1
@@ -114,6 +120,8 @@ services:
       - "8083:8083"
     command:
       - historical
+    env_file:
+      - .env
 
   middlemanager:
     image: apache/druid:29.0.1
@@ -130,6 +138,8 @@ services:
       - "8100-8105:8100-8105"
     command:
       - middleManager
+    env_file:
+      - .env
 
   router:
     image: apache/druid:29.0.1
@@ -144,3 +154,5 @@ services:
       - "8888:8888"
     command:
       - router
+    env_file:
+      - .env

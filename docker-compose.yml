@@ -28,7 +28,7 @@ volumes:
 
 services:
   postgres:
-    container_name: postgres-druid
+    container_name: postgres
     image: postgres:latest
     ports:
       - "5432:5432"
